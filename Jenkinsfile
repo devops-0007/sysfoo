@@ -1,38 +1,39 @@
 pipeline {
-  agent any
+  agent none
   stages {
     stage('build') {
+      agent {
+        docker {
+          image 'maven:3.9.6-eclipse-temurin-17'
+        }
+
+      }
       steps {
         echo 'compiling sysfoo app..'
         sh 'mvn compile'
       }
     }
 
-    stage('test') {
-      parallel {
-        stage('umit test') {
-          steps {
-            echo 'running unit tests...'
-            sh 'mvn clean test'
-          }
+    stage('unit test') {
+      agent {
+        docker {
+          image 'maven:3.9.6-eclipse-temurin-17'
         }
 
-        stage('SCA') {
-          steps {
-            sleep 4
-          }
-        }
-
-        stage('SBOM') {
-          steps {
-            sleep 2
-          }
-        }
-
+      }
+      steps {
+        echo 'running unit tests...'
+        sh 'mvn clean test'
       }
     }
 
     stage('package') {
+      agent {
+        docker {
+          image 'maven:3.9.6-eclipse-temurin-17'
+        }
+
+      }
       steps {
         echo 'package the artifact...'
         sh 'mvn package -DskipTests'
