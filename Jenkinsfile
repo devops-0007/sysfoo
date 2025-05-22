@@ -28,9 +28,9 @@ pipeline {
     }
 
     stage('package') {
+      when { branch 'main' }
       parallel {
         stage('package') {
-          when { branch 'main' }
           agent {
             docker {
               image 'maven:3.9.6-eclipse-temurin-17'
@@ -45,7 +45,6 @@ pipeline {
         }
 
         stage('Docker BnP') {
-          when { branch 'main' }
           agent any
           steps {
             script {
